@@ -1,0 +1,8 @@
+name "starting"
+description "Example usage of the dgretl library"
+authors "Lance Bachmeier"
+license "GPL-2.0"
+targetType "executable"
+lflags "-lgretl-1.0"
+versions "standalone" "gretl"
+sourcePaths "source" "../gretl"

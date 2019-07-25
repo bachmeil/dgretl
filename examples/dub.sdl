@@ -1,0 +1,8 @@
+name "dmdgretl-examples"
+description "Example usage of the dmdgretl library"
+authors "Lance Bachmeier"
+license "GPL-2.0"
+targetType "executable"
+lflags "/usr/local/lib/libgretl-1.0.so"
+versions "standalone" "gretl"
+sourcePaths "source" "../gretl"
