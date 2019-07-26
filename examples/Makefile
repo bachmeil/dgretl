@@ -22,3 +22,8 @@
 	dmd logit.d ../gretl/*.d -L/usr/local/lib/libgretl-1.0.so -version=standalone
 	./logit
 	rm logit
+
+6probit:
+	dmd probit.d ../gretl/*.d -L/usr/local/lib/libgretl-1.0.so -version=standalone
+	./probit
+	rm probit

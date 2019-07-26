@@ -1,8 +1,9 @@
+/* Basically the same example as logit.d, but I want to show how to do it. */
 import gretl.base, gretl.random;
 
 void main() {
 	randInit();
-	setSeed(200); // To compare with probit
+	setSeed(200); // To compare with logit
 	
 	// Dataset with 4 variables, column 0 is the intercept
 	// Columns 1 and 2 are
@@ -39,10 +40,10 @@ void main() {
 	
 	// It's easy to mess this up
 	// Initialize logitModel by calling gretl_model_new
-	Model * logitModel = gretl_model_new();
-	scope(exit) { gretl_model_free(logitModel); }
-	*logitModel = binary_logit(spec.ptr, ds, gretlopt.none, prn);
+	Model * probitModel = gretl_model_new();
+	scope(exit) { gretl_model_free(probitModel); }
+	*probitModel = binary_probit(spec.ptr, ds, gretlopt.none, prn);
 	
 	// Handy print functions for all of the models
-	printmodel(logitModel, ds, gretlopt.none, prn);
+	printmodel(probitModel, ds, gretlopt.none, prn);
 }
