@@ -20,7 +20,7 @@
  */
 module gretlexp.dynmodel;
  
-import std.conv, std.exception, std.math, std.stdio;
+import std.conv, std.exception, std.math, std.stdio, std.utf;
  
 import gretl.base, gretl.matrix, gretl.reg;
 version(r) {
@@ -68,6 +68,16 @@ Dataset asDataset(TS x, double** z) {
 	result.n = x.length.to!int;
 	result.Z = z;
 	dataset_set_time_series(&result, x.frequency.to!int, x.start[0].to!int, x.start[1].to!int);
+	return result;
+}
+
+// Needs manual freeing and also copies
+Dataset * mallocDataset(TS x) {
+	Dataset * result = create_new_dataset(1, x.length.to!int, 0);
+	dataset_set_time_series(result, x.frequency.to!int, x.start[0].to!int, x.start[1].to!int);
+	foreach(ii; 0..x.length) {
+		(*result)[ii.to!int,0] = x.mat.data.ptr[ii];
+	}
 	return result;
 }
 
@@ -143,59 +153,82 @@ struct ArmaFit {
 	}
 }
 
+// Copy the data
 //~ ArmaFit armaGretl(TS x, ulong p, ulong q) {
 	//~ int[] list = [5, p.to!int, 0, q.to!int, gretlListsep, 0];
-	//~ Dataset * d = create_new_dataset(1, 1, 0);
-	//~ double** tmp = d.Z;
-	//~ double*[1] z;
-	//~ z[0] = x.mat.data.ptr;
-	//~ d.Z = z.ptr;
-	//~ d.n = x.length.to!int;
-	//~ d.t2 = d.n-1;
-	//~ dataset_set_time_series(d, 12, x.start[0].to!int, x.start[1].to!int);
+	//~ Dataset * d = create_new_dataset(1, x.length.to!int, 0);
+	//~ foreach(ii; 0..x.length.to!int) {
+		//~ d.Z[0][ii] = x.mat[ii,0];
+	//~ }
+	//~ dataset_set_time_series(d, x.frequency.to!int, x.start[0].to!int, x.start[1].to!int);
 	//~ GretlPrn * prn = gretl_print_new(PrintType.stdout, null);
 	//~ Model *m;
 	//~ m = gretl_model_new();
 	//~ *m = arma(list.ptr, null, d, gretlopt.none.to!int, prn);
 	//~ auto result = ArmaFit(m, p.to!int, q.to!int);
-	//~ d.Z = tmp;
 	//~ gretl_model_free(m);
 	//~ destroy_dataset(d);
 	//~ return result;
 //~ }
 
-//ArmaFit armaGretl(TS x, ulong p, ulong q) {
-void armaGretl(TS x, ulong p, ulong q) {
+// This works for some reason without copying
+ArmaFit armaGretl(TS x, ulong p, ulong q) {
 	int[] list = [5, p.to!int, 0, q.to!int, gretlListsep, 0];
-	Dataset * d = new Dataset;
-	double[] data = new double[x.length];
-	data[] = 1.0;
-	d.Z = new double*[2].ptr;
-	d.Z[0] = data.ptr;
-	d.Z[1] = x.mat.ptr;
-	d.v = 1;
+	Dataset * d = create_new_dataset(1, 1, 0);
+	double** tmp = d.Z;
+	double*[1] z;
+	z[0] = x.mat.data.ptr;
+	d.Z = z.ptr;
 	d.n = x.length.to!int;
-	d.sd0 = 1.0;
+	d.t2 = d.n-1;
 	dataset_set_time_series(d, x.frequency.to!int, x.start[0].to!int, x.start[1].to!int);
-
-	writeln("d elements");
-	writeln(d.v);
-	writeln(d.n);
-	writeln(d.pd);
-	writeln(d.structure);
-	writeln(d.stobs[0]);
-	writeln(d.endobs[0]);
-	writeln(d.endobs[1]);
 	GretlPrn * prn = gretl_print_new(PrintType.stdout, null);
-	Model m = arma(list.ptr, null, d, gretlopt.none.to!int, prn);
-	auto result = ArmaFit(&m, p.to!int, q.to!int);
-	writeln(result.coef);
-	//~ d.Z = tmp;
-	//~ gretl_model_free(m);
-	//destroy_dataset(d);
-	
-	//~ return result;
+	Model *m;
+	m = gretl_model_new();
+	*m = arma(list.ptr, null, d, gretlopt.none.to!int, prn);
+	auto result = ArmaFit(m, p.to!int, q.to!int);
+	d.Z = tmp;
+	gretl_model_free(m);
+	destroy_dataset(d);
+	return result;
 }
+
+// This always fails for some reason
+//~ ArmaFit armaGretl(TS x, ulong p, ulong q) {
+	//~ int[] list = [5, p.to!int, 0, q.to!int, gretlListsep, 0];
+	//~ Dataset * d = new Dataset;
+	//~ writeln("d.Z");
+	//~ writeln(d.Z);
+	//~ double*[1] z;
+	//~ z[0] = x.mat.data.ptr;
+	//~ d.Z = z.ptr;
+	//~ writeln(d.Z);
+	//~ writeln(d.Z[0][5]);
+	//~ d.v = 1;
+	//~ d.n = x.length.to!int;
+	//~ d.t2 = x.length.to!int-1;
+	//~ d.structure = 0;
+	//~ d.pd = 1;
+	//~ d.sd0 = 1.0;
+	//~ d.stobs[] = '\0';
+	//~ d.stobs[0] = '1';
+	//~ d.endobs[] = '\0';
+	//~ d.endobs[0] = '1';
+	//~ d.markers ='\0';
+	//~ d.modflag = '\0';
+	//~ d.panel_sd0 = 0.0;
+	//~ dataset_set_time_series(d, x.frequency.to!int, x.start[0].to!int, x.start[1].to!int);
+
+	//~ GretlPrn * prn = gretl_print_new(PrintType.stdout, null);
+	//~ writeln("before");
+	//~ // This is where it fails
+	//~ // d is exactly the same as in the other function
+	//~ Model m = arma(list.ptr, null, d, gretlopt.none.to!int, prn);
+	//~ writeln("after");
+	//~ auto result = ArmaFit(&m, p.to!int, q.to!int);
+	//~ gretl_model_free(&m);
+	//~ return result;
+//~ }
 
 /* For now, we can use the second time element as zero for annual data */
 struct TS {

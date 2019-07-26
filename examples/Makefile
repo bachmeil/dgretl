@@ -14,7 +14,7 @@
 	rm test3
 
 4ts:
-	dmd test4.d ../gretl/*.d ../gretlexp/dynmodel.d -L/usr/local/lib/libgretl-1.0.so -version=standalone
+	dmd test4.d ../gretl/*.d ../gretlexp/dynmodel.d -L-lgretl-1.0 -version=standalone
 	./test4
 	rm test4
 
