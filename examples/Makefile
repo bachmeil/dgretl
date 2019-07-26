@@ -27,3 +27,8 @@
 	dmd probit.d ../gretl/*.d -L/usr/local/lib/libgretl-1.0.so -version=standalone
 	./probit
 	rm probit
+
+7adf:
+	dmd adf.d ../gretl/*.d ../gretlexp/dynmodel.d -L/usr/local/lib/libgretl-1.0.so -version=standalone
+	./adf
+	rm adf

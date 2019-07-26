@@ -287,6 +287,10 @@ struct TS {
 		this([x], s, f);
 	}
 	
+	double * ptr() {
+		return mat.data.ptr;
+	}
+	
 	/* Want to allow access by index
 	 * But also want to be explicit about it to prevent bugs */
 	double opIndex(Index ind) {
