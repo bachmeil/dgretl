@@ -29,6 +29,6 @@
 	rm probit
 
 7adf:
-	dmd adf.d ../gretl/*.d ../gretlexp/dynmodel.d -L/usr/local/lib/libgretl-1.0.so -version=standalone
+	dmd adf.d ../gretl/*.d ../gretlexp/dynmodel.d -L-lgretl-1.0 -version=standalone
 	./adf
 	rm adf
