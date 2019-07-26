@@ -223,10 +223,12 @@ ArmaFit armaGretl(TS x, ulong p, ulong q) {
 	//~ writeln("before");
 	//~ // This is where it fails
 	//~ // d is exactly the same as in the other function
-	//~ Model m = arma(list.ptr, null, d, gretlopt.none.to!int, prn);
+	//~ Model * m;
+	//~ m = gretl_model_new();
+	//~ *m = arma(list.ptr, null, d, gretlopt.none.to!int, prn);
 	//~ writeln("after");
-	//~ auto result = ArmaFit(&m, p.to!int, q.to!int);
-	//~ gretl_model_free(&m);
+	//~ auto result = ArmaFit(m, p.to!int, q.to!int);
+	//~ gretl_model_free(m);
 	//~ return result;
 //~ }
 
