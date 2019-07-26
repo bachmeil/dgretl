@@ -17,3 +17,8 @@
 	dmd test4.d ../gretl/*.d ../gretlexp/dynmodel.d -L/usr/local/lib/libgretl-1.0.so -version=standalone
 	./test4
 	rm test4
+
+5logit:
+	dmd logit.d ../gretl/*.d -L/usr/local/lib/libgretl-1.0.so -version=standalone
+	./logit
+	rm logit
