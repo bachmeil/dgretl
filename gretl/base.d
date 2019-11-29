@@ -398,8 +398,8 @@ extern (C) {
 	GretlPrn * gretl_print_new_with_buffer(char *buf);
   void gretl_print_destroy(GretlPrn * prn);
 	
-	int adf_test(int order, const int *list, Dataset * dset, 
-	      gretlopt opt, GretlPrn *prn);
+	//~ int adf_test(int order, const int *list, Dataset * dset, 
+	      //~ gretlopt opt, GretlPrn *prn);
 	GretlVar * gretl_VAR(int order, int * laglist, int * list, 
 		      const Dataset *dset, gretlopt opt, GretlPrn * prn, int * err);
 	Model * gretl_VAR_get_model(GretlVar * var, int i);
