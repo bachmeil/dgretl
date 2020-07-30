@@ -1,0 +1,11 @@
+name "dmdgretl-examples"
+description "Example usage of the dmdgretl library"
+authors "Lance Bachmeier"
+license "GPL-2.0"
+targetType "executable"
+//libs "C:\\Users\\bachm_000\\Downloads\\gretl-2015d-win32\\gretl\\libgretl"
+sourceFiles "libgretl.lib"
+//lflags "libgretl.dll"
+versions "standalone" "gretl"
+sourcePaths "source" "..\\gretl"
+// dmd source/app.d ..\gretl\matrix.d ..\gretl\matfunctions.d ..\gretl\base.d ..\gretl\vector.d -version=standalone libgretl.lib
