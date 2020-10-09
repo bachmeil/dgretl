@@ -27,7 +27,7 @@ struct GretlMatrix {
   double * ptr;
   matrix_info * info;
 
-  GretlMatrix * matptr() {
+  GretlMatrix * matptr() return {
     return &this;
   }
 
@@ -319,7 +319,7 @@ struct DoubleMatrix {
   	return temp;
   }
   
-  GretlMatrix * matptr() {
+  GretlMatrix * matptr() return {
 		temp.rows = rows;
 		temp.cols = cols;
     temp.ptr = data.ptr;

@@ -1,6 +1,7 @@
 module gretl.random;
 
 import gretl.base, gretl.matrix, gretl.matfunctions, gretl.vector;
+import std.math;
 version(r) {
 	import embedr.r;
 }
@@ -136,4 +137,26 @@ GretlMatrix * invWishartUnsafe(GretlMatrix S, int v) {
 
 DoubleMatrix invWishart(GretlMatrix S, int v) {
 	return DoubleMatrix(invWishartUnsafe(S, v));
+}
+
+/* pdf of multivariate normal with mean mu, covariance V
+ * x is the vector*/
+double dmvnorm(DoubleVector x, DoubleVector mu, DoubleMatrix V, bool ln=false) {
+	import std.stdio: writeln;
+	DoubleVector dev = x - mu;
+	DoubleMatrix inv_v = inv(V);
+	DoubleVector z = DoubleVector(inv_v * dev);
+	double quadform = 0.0;
+	foreach(val; z) {
+		quadform += val^^2;
+	}
+	double logSqrtDetSigma = 0.0;
+	foreach(ii; 0..V.rows) {
+		logSqrtDetSigma += log(V[ii,ii]);
+	}
+	if (ln) {
+		return -0.5*quadform - logSqrtDetSigma - 0.5*V.rows*log(2.0*PI);
+	} else {
+		return exp(-0.5*quadform - logSqrtDetSigma - 0.5*V.rows*log(2.0*PI));
+	}
 }

@@ -32,3 +32,8 @@
 	dmd adf.d ../gretl/*.d ../gretlexp/dynmodel.d -L-lgretl-1.0 -version=standalone
 	./adf
 	rm adf
+
+dmvnorm:
+	dmd dmvnorm.d ../gretl/*.d -L-lgretl-1.0 -version=standalone
+	./dmvnorm
+	rm dmvnorm

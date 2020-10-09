@@ -1,0 +1,6 @@
+library(mvtnorm)
+v <- matrix(c(1.0, 0, 0, 0, 1.0, 0, 0, 0, 1.0), nrow=3)
+print(dmvnorm(c(0.1, 0.2, 0.3), c(0.1, 0.2, 0.3), v, log=FALSE))
+print(dmvnorm(c(0.1, 0.2, 0.3), c(1.0, 4.2, 0.3), v, log=FALSE))
+print(dmvnorm(c(0.1, 0.2, 0.3), c(0.1, 0.2, 0.3), v, log=TRUE))
+print(dmvnorm(c(0.1, 0.2, 0.3), c(1.0, 4.2, 0.3), v, log=TRUE))
