@@ -142,7 +142,6 @@ DoubleMatrix invWishart(GretlMatrix S, int v) {
 /* pdf of multivariate normal with mean mu, covariance V
  * x is the vector*/
 double dmvnorm(DoubleVector x, DoubleVector mu, DoubleMatrix V, bool ln=false) {
-	import std.stdio: writeln;
 	DoubleVector dev = x - mu;
 	DoubleMatrix inv_v = inv(V);
 	DoubleVector z = DoubleVector(inv_v * dev);
